@@ -63,17 +63,18 @@ class FinderSync: FIFinderSync {
         let menu = NSMenu(title: "ZRightClick")
         switch menuKind {
         case .contextualMenuForItems, .contextualMenuForContainer:
-            let item = NSMenuItem(
-                title: "复制路径",
-                action: #selector(copyPath(_:)),
-                keyEquivalent: ""
-            )
-            item.target = self
-            menu.addItem(item)
+            add(title: "复制路径", action: #selector(copyPath(_:)), to: menu)
+            add(title: "在此处打开终端", action: #selector(openInTerminal(_:)), to: menu)
         default:
             break
         }
         return menu
+    }
+
+    private func add(title: String, action: Selector, to menu: NSMenu) {
+        let item = NSMenuItem(title: title, action: action, keyEquivalent: "")
+        item.target = self
+        menu.addItem(item)
     }
 
     /// 选中的文件；在空白处右键时退化为当前所在文件夹。
@@ -93,7 +94,50 @@ class FinderSync: FIFinderSync {
         let text = targets.map(\.path).joined(separator: "\n")
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
-        pasteboard.setString(text, forType: .string)
-        log.info("已复制 \(targets.count) 条路径")
+        let ok = pasteboard.setString(text, forType: .string)
+        log.info("复制 \(targets.count) 条路径, 写入成功=\(ok)")
+    }
+
+    /// 选中文件时取它所在的文件夹，选中文件夹时取它本身。
+    private func containingDirectory() -> URL? {
+        guard let first = currentTargets().first else { return nil }
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: first.path, isDirectory: &isDirectory),
+           isDirectory.boolValue {
+            return first
+        }
+        return first.deletingLastPathComponent()
+    }
+
+    @objc func openInTerminal(_ sender: AnyObject?) {
+        guard let directory = containingDirectory() else {
+            log.error("打开终端：没有拿到目标目录")
+            return
+        }
+
+        // 装了 iTerm2 就优先用，否则退回系统终端。
+        // 走 LaunchServices 查询而不是直接拼 /Applications 路径，沙盒下前者才可靠。
+        let candidates = ["com.googlecode.iterm2", "com.apple.Terminal"]
+        let terminal = candidates.lazy
+            .compactMap { NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0) }
+            .first
+
+        guard let terminal else {
+            log.error("打开终端：没找到可用的终端 App")
+            return
+        }
+
+        log.info("打开终端: \(terminal.lastPathComponent, privacy: .public) 目录=\(directory.path, privacy: .public)")
+        NSWorkspace.shared.open(
+            [directory],
+            withApplicationAt: terminal,
+            configuration: NSWorkspace.OpenConfiguration()
+        ) { _, error in
+            if let error {
+                log.error("打开终端失败: \(error.localizedDescription, privacy: .public)")
+            } else {
+                log.info("打开终端成功")
+            }
+        }
     }
 }
