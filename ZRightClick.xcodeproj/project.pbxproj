@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CA723DE03051626000206719 /* RightClickFinderExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CA723DD93051626000206719 /* RightClickFinderExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CA723DE03051626000206719 /* ZRightClickFinderExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CA723DD93051626000206719 /* ZRightClickFinderExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,39 +26,39 @@
 			dstPath = "";
 			dstSubfolder = PlugIns;
 			files = (
-				CA723DE03051626000206719 /* RightClickFinderExtension.appex in Embed Foundation Extensions */,
+				CA723DE03051626000206719 /* ZRightClickFinderExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		000000000000000000000120 /* Untitled Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Untitled Project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CA723DD93051626000206719 /* RightClickFinderExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RightClickFinderExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		000000000000000000000120 /* ZRightClick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZRightClick.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA723DD93051626000206719 /* ZRightClickFinderExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ZRightClickFinderExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		CA723DE13051626000206719 /* Exceptions for "RightClickFinderExtension" folder in "RightClickFinderExtension" target */ = {
+		CA723DE13051626000206719 /* Exceptions for "ZRightClickFinderExtension" folder in "ZRightClickFinderExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = CA723DD83051626000206719 /* RightClickFinderExtension */;
+			target = CA723DD83051626000206719 /* ZRightClickFinderExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		000000000000000000000010 /* Untitled Project */ = {
+		000000000000000000000010 /* ZRightClickApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Untitled Project";
+			path = ZRightClickApp;
 			sourceTree = "<group>";
 		};
-		CA723DDA3051626000206719 /* RightClickFinderExtension */ = {
+		CA723DDA3051626000206719 /* ZRightClickFinderExtension */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				CA723DE13051626000206719 /* Exceptions for "RightClickFinderExtension" folder in "RightClickFinderExtension" target */,
+				CA723DE13051626000206719 /* Exceptions for "ZRightClickFinderExtension" folder in "ZRightClickFinderExtension" target */,
 			);
-			path = RightClickFinderExtension;
+			path = ZRightClickFinderExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -80,8 +80,8 @@
 		000000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
-				000000000000000000000010 /* Untitled Project */,
-				CA723DDA3051626000206719 /* RightClickFinderExtension */,
+				000000000000000000000010 /* ZRightClickApp */,
+				CA723DDA3051626000206719 /* ZRightClickFinderExtension */,
 				000000000000000000000020 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -89,8 +89,8 @@
 		000000000000000000000020 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				000000000000000000000120 /* Untitled Project.app */,
-				CA723DD93051626000206719 /* RightClickFinderExtension.appex */,
+				000000000000000000000120 /* ZRightClick.app */,
+				CA723DD93051626000206719 /* ZRightClickFinderExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -98,9 +98,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		000000000000000100000000 /* Untitled Project */ = {
+		000000000000000100000000 /* ZRightClick */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 000000000000000110000000 /* Build configuration list for PBXNativeTarget "Untitled Project" */;
+			buildConfigurationList = 000000000000000110000000 /* Build configuration list for PBXNativeTarget "ZRightClick" */;
 			buildPhases = (
 				000000000000000120000000 /* Sources */,
 				000000000000000130000000 /* Frameworks */,
@@ -113,16 +113,16 @@
 				CA723DDF3051626000206719 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				000000000000000000000010 /* Untitled Project */,
+				000000000000000000000010 /* ZRightClickApp */,
 			);
-			name = "Untitled Project";
+			name = ZRightClick;
 			productName = MyApp;
-			productReference = 000000000000000000000120 /* Untitled Project.app */;
+			productReference = 000000000000000000000120 /* ZRightClick.app */;
 			productType = "com.apple.product-type.application";
 		};
-		CA723DD83051626000206719 /* RightClickFinderExtension */ = {
+		CA723DD83051626000206719 /* ZRightClickFinderExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CA723DE23051626000206719 /* Build configuration list for PBXNativeTarget "RightClickFinderExtension" */;
+			buildConfigurationList = CA723DE23051626000206719 /* Build configuration list for PBXNativeTarget "ZRightClickFinderExtension" */;
 			buildPhases = (
 				CA723DD53051626000206719 /* Sources */,
 				CA723DD63051626000206719 /* Frameworks */,
@@ -131,11 +131,11 @@
 			buildRules = (
 			);
 			fileSystemSynchronizedGroups = (
-				CA723DDA3051626000206719 /* RightClickFinderExtension */,
+				CA723DDA3051626000206719 /* ZRightClickFinderExtension */,
 			);
-			name = RightClickFinderExtension;
+			name = ZRightClickFinderExtension;
 			productName = RightClickFinderExtension;
-			productReference = CA723DD93051626000206719 /* RightClickFinderExtension.appex */;
+			productReference = CA723DD93051626000206719 /* ZRightClickFinderExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -156,7 +156,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 000000000000000010000000 /* Build configuration list for PBXProject "Untitled Project" */;
+			buildConfigurationList = 000000000000000010000000 /* Build configuration list for PBXProject "ZRightClick" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -170,8 +170,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				000000000000000100000000 /* Untitled Project */,
-				CA723DD83051626000206719 /* RightClickFinderExtension */,
+				000000000000000100000000 /* ZRightClick */,
+				CA723DD83051626000206719 /* ZRightClickFinderExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -205,13 +205,13 @@
 /* Begin PBXTargetDependency section */
 		CA723DDF3051626000206719 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CA723DD83051626000206719 /* RightClickFinderExtension */;
+			target = CA723DD83051626000206719 /* ZRightClickFinderExtension */;
 			targetProxy = CA723DDE3051626000206719 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		000000000000000011000000 /* Debug configuration for PBXProject "Untitled Project" */ = {
+		000000000000000011000000 /* Debug configuration for PBXProject "ZRightClick" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -268,7 +268,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -281,7 +281,7 @@
 			};
 			name = Debug;
 		};
-		000000000000000012000000 /* Release configuration for PBXProject "Untitled Project" */ = {
+		000000000000000012000000 /* Release configuration for PBXProject "ZRightClick" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -332,7 +332,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PROJECT_UNIQUE_VALUE = TUB86EN0;
@@ -343,7 +343,7 @@
 			};
 			name = Release;
 		};
-		000000000000000111000000 /* Debug configuration for PBXNativeTarget "Untitled Project" */ = {
+		000000000000000111000000 /* Debug configuration for PBXNativeTarget "ZRightClick" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -365,12 +365,12 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.$(PROJECT_UNIQUE_VALUE:identifier).$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.inexom.zrightclick;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
-				SDKROOT = auto;
+				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -380,7 +380,7 @@
 			};
 			name = Debug;
 		};
-		000000000000000112000000 /* Release configuration for PBXNativeTarget "Untitled Project" */ = {
+		000000000000000112000000 /* Release configuration for PBXNativeTarget "ZRightClick" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -402,12 +402,12 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.$(PROJECT_UNIQUE_VALUE:identifier).$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.inexom.zrightclick;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
-				SDKROOT = auto;
+				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -417,7 +417,7 @@
 			};
 			name = Release;
 		};
-		CA723DE33051626000206719 /* Debug configuration for PBXNativeTarget "RightClickFinderExtension" */ = {
+		CA723DE33051626000206719 /* Debug configuration for PBXNativeTarget "ZRightClickFinderExtension" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -427,8 +427,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RightClickFinderExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = RightClickFinderExtension;
+				INFOPLIST_FILE = ZRightClickFinderExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ZRightClick Finder Extension";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -436,7 +436,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = devplaceholder.TUB86EN0.MyApp.RightClickFinderExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.inexom.zrightclick.FinderExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -448,7 +448,7 @@
 			};
 			name = Debug;
 		};
-		CA723DE43051626000206719 /* Release configuration for PBXNativeTarget "RightClickFinderExtension" */ = {
+		CA723DE43051626000206719 /* Release configuration for PBXNativeTarget "ZRightClickFinderExtension" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -458,8 +458,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RightClickFinderExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = RightClickFinderExtension;
+				INFOPLIST_FILE = ZRightClickFinderExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ZRightClick Finder Extension";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -467,7 +467,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = devplaceholder.TUB86EN0.MyApp.RightClickFinderExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.inexom.zrightclick.FinderExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -482,27 +482,27 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		000000000000000010000000 /* Build configuration list for PBXProject "Untitled Project" */ = {
+		000000000000000010000000 /* Build configuration list for PBXProject "ZRightClick" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				000000000000000011000000 /* Debug configuration for PBXProject "Untitled Project" */,
-				000000000000000012000000 /* Release configuration for PBXProject "Untitled Project" */,
+				000000000000000011000000 /* Debug configuration for PBXProject "ZRightClick" */,
+				000000000000000012000000 /* Release configuration for PBXProject "ZRightClick" */,
 			);
 			defaultConfigurationName = Release;
 		};
-		000000000000000110000000 /* Build configuration list for PBXNativeTarget "Untitled Project" */ = {
+		000000000000000110000000 /* Build configuration list for PBXNativeTarget "ZRightClick" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				000000000000000111000000 /* Debug configuration for PBXNativeTarget "Untitled Project" */,
-				000000000000000112000000 /* Release configuration for PBXNativeTarget "Untitled Project" */,
+				000000000000000111000000 /* Debug configuration for PBXNativeTarget "ZRightClick" */,
+				000000000000000112000000 /* Release configuration for PBXNativeTarget "ZRightClick" */,
 			);
 			defaultConfigurationName = Release;
 		};
-		CA723DE23051626000206719 /* Build configuration list for PBXNativeTarget "RightClickFinderExtension" */ = {
+		CA723DE23051626000206719 /* Build configuration list for PBXNativeTarget "ZRightClickFinderExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CA723DE33051626000206719 /* Debug configuration for PBXNativeTarget "RightClickFinderExtension" */,
-				CA723DE43051626000206719 /* Release configuration for PBXNativeTarget "RightClickFinderExtension" */,
+				CA723DE33051626000206719 /* Debug configuration for PBXNativeTarget "ZRightClickFinderExtension" */,
+				CA723DE43051626000206719 /* Release configuration for PBXNativeTarget "ZRightClickFinderExtension" */,
 			);
 			defaultConfigurationName = Release;
 		};
