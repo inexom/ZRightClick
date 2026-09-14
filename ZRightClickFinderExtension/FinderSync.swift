@@ -30,16 +30,31 @@ class FinderSync: FIFinderSync {
         updateObservedDirectories()
     }
 
+    /// 沙盒里 NSHomeDirectory() 返回的是扩展自己的容器路径，拿不到用户真实家目录。
+    private func realHomeDirectory() -> URL {
+        if let pw = getpwuid(getuid()), let dir = pw.pointee.pw_dir {
+            return URL(fileURLWithPath: String(cString: dir), isDirectory: true)
+        }
+        return URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
+    }
+
     /// Finder 只在这里登记过的目录树下显示我们的菜单，没登记就完全看不到。
     private func updateObservedDirectories() {
-        var urls: Set<URL> = [URL(fileURLWithPath: "/")]
+        var urls: Set<URL> = [
+            URL(fileURLWithPath: "/", isDirectory: true),
+            URL(fileURLWithPath: "/Volumes", isDirectory: true),
+            realHomeDirectory(),
+        ]
+        // 沙盒下这个调用常常返回空，所以上面几条是兜底
         let volumes = FileManager.default.mountedVolumeURLs(
             includingResourceValuesForKeys: nil,
             options: [.skipHiddenVolumes]
         ) ?? []
         urls.formUnion(volumes)
         FIFinderSyncController.default().directoryURLs = urls
-        log.info("已登记 \(urls.count) 个目录")
+        for url in urls.sorted(by: { $0.path < $1.path }) {
+            log.info("登记目录: \(url.path, privacy: .public)")
+        }
     }
 
     // MARK: - 菜单

@@ -1,38 +1,48 @@
 #!/bin/bash
 #
-# 开发闭环：编译 → 装到 /Applications → 注册并启用 Finder 扩展 → 重启 Finder → 跟日志
+# 开发闭环：编译 → 装到 /Applications → 重新注册扩展 → 启动宿主 App → 重启 Finder → 查状态
 #
-#   ./scripts/dev.sh          编译 + 安装 + 重启 Finder
-#   ./scripts/dev.sh log      只跟日志（另开一个终端窗口用）
+#   ./scripts/dev.sh          完整一轮
+#   ./scripts/dev.sh log      实时跟日志（另开终端窗口）
+#   ./scripts/dev.sh logs     回看最近 5 分钟日志
 #   ./scripts/dev.sh status   查看扩展注册状态
+#
+# 这里每一步都对应一个踩过的坑，别随手删：
+#   1. 必须装到 /Applications：注册在 build/ 目录下时 pluginkit 认不出它是 FinderSync 扩展
+#   2. 必须先注销旧路径：同一个 bundle id 注册两份会互相顶掉
+#   3. 必须启动宿主 App 一次：LaunchServices 没登记过，扩展不会被 Finder 拉起
+#   4. 必须在注册之后才重启 Finder：顺序反了扩展进程不会启动
+#   5. 查日志要带 --info：info 级别日志默认不进持久存储，log show 不加参数看不到
 #
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCHEME="ZRightClick"
 APP_NAME="ZRightClick.app"
+APPEX_NAME="ZRightClickFinderExtension.appex"
 EXT_ID="com.inexom.zrightclick.FinderExtension"
 SUBSYSTEM="com.inexom.zrightclick"
 BUILD_DIR="$REPO/build"
 INSTALL_DIR="/Applications"
-
-follow_log() {
-  echo "==> 跟随扩展日志（Ctrl-C 结束）"
-  log stream --style compact --level info \
-    --predicate "subsystem == \"$SUBSYSTEM\""
-}
-
-show_status() {
-  echo "==> 已注册的 Finder 扩展"
-  pluginkit -m -v -p com.apple.FinderSync || true
-  echo
-  echo "==> 本扩展状态（+ 表示已启用，- 表示已注册但未启用，空表示没注册上）"
-  pluginkit -m -v -i "$EXT_ID" || echo "未找到 $EXT_ID"
-}
+APPEX_INSTALLED="$INSTALL_DIR/$APP_NAME/Contents/PlugIns/$APPEX_NAME"
 
 case "${1:-build}" in
-  log)    follow_log; exit 0 ;;
-  status) show_status; exit 0 ;;
+  log)
+    echo "==> 实时跟随扩展日志（Ctrl-C 结束）"
+    exec log stream --style compact --level info --predicate "subsystem == \"$SUBSYSTEM\""
+    ;;
+  logs)
+    echo "==> 最近 5 分钟扩展日志"
+    exec log show --last 5m --info --style compact --predicate "subsystem == \"$SUBSYSTEM\""
+    ;;
+  status)
+    echo "==> 系统里所有 FinderSync 扩展（+ 已启用 / - 已注册未启用）"
+    pluginkit -m -v -p com.apple.FinderSync
+    echo
+    echo "==> 扩展进程"
+    ps aux | grep "$APPEX_NAME" | grep -v grep || echo "（未运行）"
+    exit 0
+    ;;
 esac
 
 echo "==> 编译 $SCHEME"
@@ -42,24 +52,38 @@ xcodebuild \
   -configuration Debug \
   -destination 'platform=macOS' \
   CONFIGURATION_BUILD_DIR="$BUILD_DIR" \
-  build | tail -20
+  build 2>&1 | grep -E "error:|warning: [^M]|BUILD SUCCEEDED|BUILD FAILED" || true
 
-APP_PATH="$BUILD_DIR/$APP_NAME"
-[[ -d "$APP_PATH" ]] || { echo "编译产物不存在: $APP_PATH"; exit 1; }
+[[ -d "$BUILD_DIR/$APP_NAME" ]] || { echo "编译产物不存在，先看上面的报错"; exit 1; }
 
-# Finder 只加载 /Applications 里的扩展，放在 build 目录下往往不生效
+echo "==> 注销旧注册"
+pluginkit -r "$BUILD_DIR/$APP_NAME/Contents/PlugIns/$APPEX_NAME" 2>/dev/null || true
+pluginkit -r "$APPEX_INSTALLED" 2>/dev/null || true
+
 echo "==> 安装到 $INSTALL_DIR"
 rm -rf "$INSTALL_DIR/$APP_NAME"
-cp -R "$APP_PATH" "$INSTALL_DIR/"
+cp -R "$BUILD_DIR/$APP_NAME" "$INSTALL_DIR/"
 
 echo "==> 注册并启用扩展"
-pluginkit -a "$INSTALL_DIR/$APP_NAME/Contents/PlugIns/ZRightClickFinderExtension.appex" 2>/dev/null || true
-pluginkit -e use -i "$EXT_ID" 2>/dev/null || true
+pluginkit -a "$APPEX_INSTALLED"
+open -a "$INSTALL_DIR/$APP_NAME"
+sleep 2
+pluginkit -e use -i "$EXT_ID"
 
 echo "==> 重启 Finder"
 killall Finder 2>/dev/null || true
-sleep 1
+sleep 4
 
-show_status
 echo
-echo "完成。现在去 Finder 里右键试试。看不到菜单就跑 ./scripts/dev.sh log 查日志。"
+echo "==> 扩展状态"
+pluginkit -m -v -i "$EXT_ID" || echo "没注册上"
+ps aux | grep "$APPEX_NAME" | grep -v grep >/dev/null \
+  && echo "扩展进程已启动" \
+  || echo "扩展进程未启动（这是问题信号）"
+
+echo
+echo "==> 启动日志"
+log show --last 1m --info --style compact --predicate "subsystem == \"$SUBSYSTEM\"" | tail -12
+
+echo
+echo "去 Finder 里右键试试。日志：./scripts/dev.sh log"
