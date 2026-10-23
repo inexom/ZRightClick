@@ -2,7 +2,8 @@
 #
 # 开发闭环：编译 → 装到 /Applications → 重新注册扩展 → 启动宿主 App → 重启 Finder → 查状态
 #
-#   ./scripts/dev.sh          完整一轮
+#   ./scripts/dev.sh          完整一轮（Release）
+#   ./scripts/dev.sh debug    使用 Debug，便于调试
 #   ./scripts/dev.sh log      实时跟日志（另开终端窗口）
 #   ./scripts/dev.sh logs     回看最近 5 分钟日志
 #   ./scripts/dev.sh status   查看扩展注册状态
@@ -25,8 +26,14 @@ SUBSYSTEM="com.inexom.zrightclick"
 BUILD_DIR="$REPO/build"
 INSTALL_DIR="/Applications"
 APPEX_INSTALLED="$INSTALL_DIR/$APP_NAME/Contents/PlugIns/$APPEX_NAME"
+CONFIGURATION="Release"
 
-case "${1:-build}" in
+case "${1:-release}" in
+  build|release)
+    ;;
+  debug)
+    CONFIGURATION="Debug"
+    ;;
   log)
     echo "==> 实时跟随扩展日志（Ctrl-C 结束）"
     exec log stream --style compact --level info --predicate "subsystem == \"$SUBSYSTEM\""
@@ -43,22 +50,36 @@ case "${1:-build}" in
     ps aux | grep "$APPEX_NAME" | grep -v grep || echo "（未运行）"
     exit 0
     ;;
+  *)
+    echo "用法：$0 [release|debug|status|log|logs]" >&2
+    exit 2
+    ;;
 esac
 
-echo "==> 编译 $SCHEME"
-xcodebuild \
+echo "==> 编译 $SCHEME ($CONFIGURATION)"
+BUILD_LOG="$(mktemp -t zrightclick-build)"
+trap 'rm -f "$BUILD_LOG"' EXIT
+if ! xcodebuild \
   -project "$REPO/ZRightClick.xcodeproj" \
   -scheme "$SCHEME" \
-  -configuration Debug \
+  -configuration "$CONFIGURATION" \
   -destination 'platform=macOS' \
   CONFIGURATION_BUILD_DIR="$BUILD_DIR" \
-  build 2>&1 | grep -E "error:|warning: [^M]|BUILD SUCCEEDED|BUILD FAILED" || true
+  build >"$BUILD_LOG" 2>&1; then
+  cat "$BUILD_LOG"
+  exit 1
+fi
+grep -E "error:|warning: [^M]|BUILD SUCCEEDED|BUILD FAILED" "$BUILD_LOG" || true
 
 [[ -d "$BUILD_DIR/$APP_NAME" ]] || { echo "编译产物不存在，先看上面的报错"; exit 1; }
 
 echo "==> 注销旧注册"
 pluginkit -r "$BUILD_DIR/$APP_NAME/Contents/PlugIns/$APPEX_NAME" 2>/dev/null || true
 pluginkit -r "$APPEX_INSTALLED" 2>/dev/null || true
+
+echo "==> 停止旧版本"
+pkill -x ZRightClick 2>/dev/null || true
+pkill -x ZRightClickFinderExtension 2>/dev/null || true
 
 echo "==> 安装到 $INSTALL_DIR"
 rm -rf "$INSTALL_DIR/$APP_NAME"

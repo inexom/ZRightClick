@@ -48,6 +48,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+        AABBCCDDEEFF000000000001 /* Shared */ = {
+            isa = PBXFileSystemSynchronizedRootGroup;
+            path = Shared;
+            sourceTree = "<group>";
+        };
 		000000000000000000000010 /* ZRightClickApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ZRightClickApp;
@@ -80,6 +85,7 @@
 		000000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
+                AABBCCDDEEFF000000000001 /* Shared */,
 				000000000000000000000010 /* ZRightClickApp */,
 				CA723DDA3051626000206719 /* ZRightClickFinderExtension */,
 				000000000000000000000020 /* Products */,
@@ -113,6 +119,7 @@
 				CA723DDF3051626000206719 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+                AABBCCDDEEFF000000000001 /* Shared */,
 				000000000000000000000010 /* ZRightClickApp */,
 			);
 			name = ZRightClick;
@@ -131,6 +138,7 @@
 			buildRules = (
 			);
 			fileSystemSynchronizedGroups = (
+                AABBCCDDEEFF000000000001 /* Shared */,
 				CA723DDA3051626000206719 /* ZRightClickFinderExtension */,
 			);
 			name = ZRightClickFinderExtension;
@@ -338,6 +346,7 @@
 				PROJECT_UNIQUE_VALUE = TUB86EN0;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				WATCHOS_DEPLOYMENT_TARGET = 27.0;
 				XROS_DEPLOYMENT_TARGET = 27.0;
 			};
@@ -346,11 +355,14 @@
 		000000000000000111000000 /* Debug configuration for PBXNativeTarget "ZRightClick" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
+				ENABLE_USER_SELECTED_FILES = readwrite;
+				CODE_SIGN_ENTITLEMENTS = Config/ZRightClick.entitlements;
+				INFOPLIST_FILE = "Config/ZRightClick-Info.plist";
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -372,7 +384,7 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
@@ -383,11 +395,14 @@
 		000000000000000112000000 /* Release configuration for PBXNativeTarget "ZRightClick" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
+				ENABLE_USER_SELECTED_FILES = readwrite;
+				CODE_SIGN_ENTITLEMENTS = Config/ZRightClick.entitlements;
+				INFOPLIST_FILE = "Config/ZRightClick-Info.plist";
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -409,7 +424,7 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;

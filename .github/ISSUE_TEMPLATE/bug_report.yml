@@ -1,0 +1,30 @@
+name: Bug report / 问题反馈
+description: Report a reproducible problem / 反馈可复现的问题
+title: "[Bug] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened? / 遇到了什么问题？
+      description: Include what you expected to happen. / 请同时说明期望的结果。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce / 复现步骤
+      placeholder: "1. …\n2. …\n3. …"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment / 运行环境
+      description: macOS version, app commit or build, terminal app if relevant. / 系统版本、应用提交或构建版本，以及相关终端名称。
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots or logs / 截图或日志
+      description: Remove private paths and sensitive information before sharing. / 请先移除私人路径和敏感信息。

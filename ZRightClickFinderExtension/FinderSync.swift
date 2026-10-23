@@ -5,11 +5,23 @@ import os
 private let log = Logger(subsystem: "com.inexom.zrightclick", category: "FinderSync")
 
 class FinderSync: FIFinderSync {
+    private let stateLock = NSRecursiveLock()
+    private var nextCreationTag = 0
+    private var menuTargets: [URL] = []
+    private var targetsContainer = false
+    private var configuration = MenuSettingsTransport.load()
+    private var creationTargets: [Int: (path: String, typeID: String)] = [:]
 
     override init() {
         super.init()
+        L10n.use(configuration.language ?? .initial)
         log.info("扩展已加载: \(Bundle.main.bundlePath, privacy: .public)")
         updateObservedDirectories()
+        DistributedNotificationCenter.default().addObserver(
+            self, selector: #selector(settingsChanged(_:)), name: MenuSettingsTransport.changed,
+            object: nil, suspensionBehavior: .deliverImmediately
+        )
+        requestSettings()
 
         // 挂载/卸载磁盘时重新登记，否则新插入的外置硬盘上不会出现菜单
         NSWorkspace.shared.notificationCenter.addObserver(
@@ -23,6 +35,20 @@ class FinderSync: FIFinderSync {
             selector: #selector(volumesDidChange),
             name: NSWorkspace.didUnmountNotification,
             object: nil
+        )
+    }
+
+    @objc private func settingsChanged(_ notification: Notification) {
+        guard let value = MenuSettingsTransport.decode(notification.object) else { return }
+        stateLock.withLock { configuration = value }
+        L10n.use(value.language ?? .initial)
+        MenuSettingsTransport.save(value)
+        log.info("菜单配置已更新")
+    }
+
+    private func requestSettings() {
+        DistributedNotificationCenter.default().postNotificationName(
+            MenuSettingsTransport.requested, object: nil, userInfo: nil, deliverImmediately: true
         )
     }
 
@@ -60,11 +86,56 @@ class FinderSync: FIFinderSync {
     // MARK: - 菜单
 
     override func menu(for menuKind: FIMenuKind) -> NSMenu {
+        let controller = FIFinderSyncController.default()
+        let container = controller.targetedURL()
+        var isContainer = menuKind == .contextualMenuForContainer
+        var targets = isContainer ? [] : (controller.selectedItemURLs() ?? [])
+        if targets.isEmpty, let container {
+            targets = [container]
+            isContainer = true
+        }
+        // Never hold a state lock across AppKit drawing or distributed IPC.
+        let configuration = stateLock.withLock {
+            menuTargets = targets
+            targetsContainer = isContainer
+            if creationTargets.count > 128 { creationTargets.removeAll() }
+            return self.configuration
+        }
         let menu = NSMenu(title: "ZRightClick")
         switch menuKind {
         case .contextualMenuForItems, .contextualMenuForContainer:
-            add(title: "复制路径", action: #selector(copyPath(_:)), to: menu)
-            add(title: "在此处打开终端", action: #selector(openInTerminal(_:)), to: menu)
+            requestSettings()
+            if menuKind == .contextualMenuForContainer, configuration.newFileEnabled {
+                let parent = NSMenuItem(title: L10n.text("新建文件"), action: nil, keyEquivalent: "")
+                let submenu = NSMenu(title: L10n.text("新建文件"))
+                for type in configuration.enabledTypes {
+                    let item = NSMenuItem(title: type.title, action: #selector(createFile(_:)), keyEquivalent: "")
+                    item.target = self
+                    // Capture the directory per menu item, independent of later Finder selection.
+                    item.tag = stateLock.withLock {
+                        nextCreationTag &+= 1
+                        creationTargets[nextCreationTag] = (container?.path ?? "", type.id)
+                        return nextCreationTag
+                    }
+                    item.image = type.icon
+                    submenu.addItem(item)
+                }
+                if submenu.items.isEmpty {
+                    let empty = NSMenuItem(title: L10n.text("请先启用文件类型"), action: nil, keyEquivalent: "")
+                    empty.isEnabled = false
+                    submenu.addItem(empty)
+                }
+                submenu.addItem(.separator())
+                add(title: L10n.text("管理文件类型…"), action: #selector(manageTypes(_:)), to: submenu)
+                parent.submenu = submenu
+                menu.addItem(parent)
+            }
+            if configuration.copyPathEnabled {
+                add(title: L10n.text("复制路径"), action: #selector(copyPath(_:)), to: menu)
+            }
+            if configuration.terminalEnabled {
+                add(title: L10n.text("在此处打开终端"), action: #selector(openInTerminal(_:)), to: menu)
+            }
         default:
             break
         }
@@ -79,10 +150,7 @@ class FinderSync: FIFinderSync {
 
     /// 选中的文件；在空白处右键时退化为当前所在文件夹。
     private func currentTargets() -> [URL] {
-        let selected = FIFinderSyncController.default().selectedItemURLs() ?? []
-        if !selected.isEmpty { return selected }
-        if let container = FIFinderSyncController.default().targetedURL() { return [container] }
-        return []
+        stateLock.withLock { menuTargets }
     }
 
     @objc func copyPath(_ sender: AnyObject?) {
@@ -98,46 +166,52 @@ class FinderSync: FIFinderSync {
         log.info("复制 \(targets.count) 条路径, 写入成功=\(ok)")
     }
 
-    /// 选中文件时取它所在的文件夹，选中文件夹时取它本身。
-    private func containingDirectory() -> URL? {
-        guard let first = currentTargets().first else { return nil }
-        var isDirectory: ObjCBool = false
-        if FileManager.default.fileExists(atPath: first.path, isDirectory: &isDirectory),
-           isDirectory.boolValue {
-            return first
-        }
-        return first.deletingLastPathComponent()
+    @objc func openInTerminal(_ sender: AnyObject?) {
+        let (selection, isContainer) = stateLock.withLock { (menuTargets.first, targetsContainer) }
+        guard let target = selection else { return }
+        // 仅传路径；目录类型判断与文件访问都由取得用户授权的主应用完成。
+        var components = URLComponents()
+        components.scheme = "zrightclick"
+        components.host = "open-terminal"
+        components.queryItems = [
+            URLQueryItem(name: "path", value: target.path),
+            URLQueryItem(name: "kind", value: isContainer ? "container" : "item"),
+        ]
+        send(components)
     }
 
-    @objc func openInTerminal(_ sender: AnyObject?) {
-        guard let directory = containingDirectory() else {
-            log.error("打开终端：没有拿到目标目录")
+    @objc private func createFile(_ sender: NSMenuItem) {
+        log.info("收到新建菜单动作，tag=\(sender.tag)")
+        guard let target = stateLock.withLock({ creationTargets[sender.tag] }), !target.path.isEmpty else {
+            log.error("无法恢复新建文件目标")
             return
         }
+        let path = target.path
+        let type = target.typeID
+        var request = URLComponents()
+        request.scheme = "zrightclick"
+        request.host = "create-file"
+        request.queryItems = [URLQueryItem(name: "path", value: path), URLQueryItem(name: "type", value: type)]
+        send(request)
+    }
 
-        // 装了 iTerm2 就优先用，否则退回系统终端。
-        // 走 LaunchServices 查询而不是直接拼 /Applications 路径，沙盒下前者才可靠。
-        let candidates = ["com.googlecode.iterm2", "com.apple.Terminal"]
-        let terminal = candidates.lazy
-            .compactMap { NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0) }
-            .first
+    @objc private func manageTypes(_ sender: AnyObject?) {
+        var request = URLComponents()
+        request.scheme = "zrightclick"
+        request.host = "settings"
+        send(request)
+    }
 
-        guard let terminal else {
-            log.error("打开终端：没找到可用的终端 App")
+    private func send(_ components: URLComponents) {
+        guard let request = components.url,
+              let app = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.inexom.zrightclick") else {
+            log.error("找不到 ZRightClick 主应用")
             return
         }
-
-        log.info("打开终端: \(terminal.lastPathComponent, privacy: .public) 目录=\(directory.path, privacy: .public)")
-        NSWorkspace.shared.open(
-            [directory],
-            withApplicationAt: terminal,
-            configuration: NSWorkspace.OpenConfiguration()
-        ) { _, error in
-            if let error {
-                log.error("打开终端失败: \(error.localizedDescription, privacy: .public)")
-            } else {
-                log.info("打开终端成功")
-            }
+        let configuration = NSWorkspace.OpenConfiguration()
+        configuration.activates = false
+        NSWorkspace.shared.open([request], withApplicationAt: app, configuration: configuration) { _, error in
+            if let error { log.error("转交主应用失败: \(error.localizedDescription, privacy: .public)") }
         }
     }
 }
