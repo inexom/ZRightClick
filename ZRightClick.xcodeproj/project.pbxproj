@@ -435,6 +435,7 @@
 		CA723DE33051626000206719 /* Debug configuration for PBXNativeTarget "ZRightClickFinderExtension" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/ZRightClickFinderExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -466,6 +467,7 @@
 		CA723DE43051626000206719 /* Release configuration for PBXNativeTarget "ZRightClickFinderExtension" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/ZRightClickFinderExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;

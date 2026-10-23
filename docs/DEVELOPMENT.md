@@ -1,6 +1,6 @@
 # Development guide
 
-[English overview](../README.md) · [中文介绍](../README.zh-CN.md)
+[中文介绍](../README.md) · [English overview](../README.en.md)
 
 ZRightClick targets macOS 15+. The current project has been built with Xcode 27.0 beta. It uses Foundation, AppKit, SwiftUI, UniformTypeIdentifiers, and FinderSync, with no third-party package dependencies.
 
@@ -30,7 +30,15 @@ For the full local development loop:
 
 The install script replaces `/Applications/ZRightClick.app`. Registering the installed extension, launching the host, and then restarting Finder are intentional: multiple registered copies and stale extension processes can prevent the expected build from loading. Build failures stop installation.
 
-The development setup has been verified locally with ad-hoc signing. Distribution signing, notarization, App Store provisioning, and review have not been completed.
+The development setup has been verified locally with ad-hoc signing. Version 1.0 is distributed as an ad-hoc-signed, unnotarized universal build. Developer ID signing, notarization, App Store provisioning, and review have not been completed.
+
+## Package a release
+
+```sh
+./scripts/release.sh 1.0
+```
+
+Requires Python 3 for entitlement checks. This builds Release for arm64 and x86_64, verifies both bundles, their versions and signed sandbox entitlements, and creates a DMG, a ZIP, and `SHA256SUMS.txt` in `build/releases/v1.0/`. It does not install the build, restart Finder, create a Git tag, or publish to GitHub. The DMG includes the app, an Applications shortcut, and bilingual installation notes. The current script uses ad-hoc signing and does not notarize the build.
 
 ## Tests
 

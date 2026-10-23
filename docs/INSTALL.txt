@@ -1,0 +1,38 @@
+ZRightClick
+===========
+
+中文
+----
+系统要求：macOS 15 或更高版本；支持 Apple 芯片与 Intel Mac。
+
+1. 将 ZRightClick.app 拖入“应用程序”，从应用程序目录启动。
+2. 在“系统设置 → 通用 → 登录项与扩展 → 访达扩展”中启用 ZRightClick。
+3. 在普通文件夹中右键，即可使用启用的功能。
+4. 首次执行文件或终端操作时，选择目标文件夹或它的上级目录进行授权。
+
+当前版本仅使用临时签名，未经 Apple 公证。
+若系统阻止打开，请先确认下载来源与 SHA-256 校验值，再参考 Apple 官方说明：
+https://support.apple.com/zh-cn/102445
+在可用时，使用“系统设置 → 隐私与安全性 → 仍要打开”。
+
+窗口右下角可切换中英文。关闭窗口后继续在菜单栏运行；从菜单栏选择退出才会停止主应用。
+
+English
+-------
+Requires macOS 15 or later. Supports Apple silicon and Intel Macs.
+
+1. Drag ZRightClick.app into Applications and launch it from there.
+2. Enable ZRightClick in System Settings > General > Login Items & Extensions > Finder Extensions.
+3. Right-click in an ordinary Finder folder to use your enabled actions.
+4. When asked, select the target folder or a parent folder to grant access.
+
+This build is ad-hoc signed and is not notarized by Apple.
+If macOS blocks it, verify the download source and SHA-256 checksum, then follow Apple's instructions:
+https://support.apple.com/102445
+Use System Settings > Privacy & Security > Open Anyway when available.
+
+Switch language at the bottom-right of settings. Closing the window keeps the app in the menu bar;
+choose Quit from the menu bar to stop the host.
+
+Project / 项目：https://github.com/inexom/ZRightClick
+Copyright (c) 2026 inexom. All rights reserved. No software license is granted.
