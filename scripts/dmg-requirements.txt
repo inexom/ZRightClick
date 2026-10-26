@@ -1,0 +1,3 @@
+# Packaging tools only; neither package is shipped in the app.
+ds-store==1.3.3
+mac-alias==2.2.3

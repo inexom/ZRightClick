@@ -6,7 +6,7 @@ ZRightClick
 系统要求：macOS 15 或更高版本；支持 Apple 芯片与 Intel Mac。
 
 1. 将 ZRightClick.app 拖入“应用程序”，从应用程序目录启动。
-2. 在“系统设置 → 通用 → 登录项与扩展 → 访达扩展”中启用 ZRightClick。
+2. 按首次启用引导点击“打开系统设置”，在系统列表中开启 ZRightClick，返回后点击“开始使用”。部分 macOS 版本将列表称为“文件提供程序”。
 3. 在普通文件夹中右键，即可使用启用的功能。
 4. 首次执行文件或终端操作时，选择目标文件夹或它的上级目录进行授权。
 
@@ -22,7 +22,7 @@ English
 Requires macOS 15 or later. Supports Apple silicon and Intel Macs.
 
 1. Drag ZRightClick.app into Applications and launch it from there.
-2. Enable ZRightClick in System Settings > General > Login Items & Extensions > Finder Extensions.
+2. Choose Open System Settings in the first-run guide, enable ZRightClick in the system list, then return and choose Get Started. Some macOS versions call the list File Providers.
 3. Right-click in an ordinary Finder folder to use your enabled actions.
 4. When asked, select the target folder or a parent folder to grant access.
 

@@ -67,6 +67,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     func windowWillClose(_ notification: Notification) {
         guard !isTerminating, let window = notification.object as? NSWindow, window === settingsWindow else { return }
         settingsWindowFrame = window.frame
+        ExtensionSetup.shared.stop()
         window.delegate = nil
         settingsWindow = nil
         // Keep the closing window alive until AppKit finishes this close event,

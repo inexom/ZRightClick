@@ -16,7 +16,7 @@
 
 ZRightClick is a native macOS Finder utility with a small set of everyday actions. Pick the menu entries you need, choose your file types and terminal, and keep the app in the menu bar while you work.
 
-> **Project status:** version 1.0 is available as a universal macOS download. It is ad-hoc signed and **not notarized**; a Developer ID-signed or Mac App Store release is not available yet. Source visibility does **not** grant a software license; see [Usage and copyright](#usage-and-copyright).
+> **Project status:** version 1.1 is available as a universal macOS download. It is ad-hoc signed and **not notarized**; a Developer ID-signed or Mac App Store release is not available yet. Source visibility does **not** grant a software license; see [Usage and copyright](#usage-and-copyright).
 
 ## Features
 
@@ -41,12 +41,12 @@ The app uses **SwiftUI + AppKit**, with a **FinderSync extension** for context m
 
 ## Get started
 
-### Download 1.0
+### Download 1.1
 
-[**Download DMG**](https://github.com/inexom/ZRightClick/releases/download/v1.0/ZRightClick-1.0-universal.dmg) · [ZIP](https://github.com/inexom/ZRightClick/releases/download/v1.0/ZRightClick-1.0-universal.zip) · [Release notes and checksums](https://github.com/inexom/ZRightClick/releases/tag/v1.0)
+[**Download DMG**](https://github.com/inexom/ZRightClick/releases/download/v1.1/ZRightClick-1.1-universal.dmg) · [ZIP](https://github.com/inexom/ZRightClick/releases/download/v1.1/ZRightClick-1.1-universal.zip) · [Release notes and checksums](https://github.com/inexom/ZRightClick/releases/tag/v1.1)
 
 1. Open the DMG and drag **ZRightClick.app** into **Applications**. For the ZIP, extract it and move the app to Applications.
-2. Launch the app from Applications, then enable the Finder extension as described below.
+2. Launch the app from Applications and follow the first-run guide to open system extension settings and enable ZRightClick.
 3. This build is **not notarized**. If macOS blocks it, verify the source and checksum, then follow [Apple's instructions for opening apps](https://support.apple.com/102445), including **System Settings → Privacy & Security → Open Anyway** when available.
 
 The same download contains **arm64 and x86_64** code. macOS 15 or later is required. Existing settings and saved folder access are kept when updating the same application in place.
@@ -71,12 +71,14 @@ Alternatively, open `ZRightClick.xcodeproj` in Xcode and select the **ZRightClic
 
 ### Enable the Finder extension
 
-1. Open **System Settings → General → Login Items & Extensions → Finder Extensions** and enable **ZRightClick**. The exact labels may differ by macOS version.
+1. On first launch, choose **Open System Settings** in the setup guide, enable **ZRightClick** in the system list, then return and choose **Get Started**. Some macOS versions label this list **File Providers**. The manual entry is usually under **System Settings → General → Login Items & Extensions**.
 2. Open ZRightClick and choose which actions appear in Finder.
 3. Right-click empty space in a regular folder to use **New File**. Select files or folders to copy their paths or open a terminal at the relevant location.
 4. On first file or terminal access, select the target folder or a parent folder in the system permission dialog.
 
 Permissions are saved for reuse. Creating files needs **read/write** access; opening a terminal can use **read-only** access. Review or remove saved permissions in **Folder Access**.
+
+Settings shows a warning while the extension is disabled. Reopen the guide at any time through **Extension Settings…**. The guide checks the actual system state and leaves activation to you.
 
 ## Details that matter
 

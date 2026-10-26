@@ -16,7 +16,7 @@
 
 ZRightClick 是一款原生 macOS Finder 右键增强工具，专注于日常文件操作。选好需要的菜单、文件类型和终端，关闭设置窗口后，它会安静地留在菜单栏中。
 
-> **项目状态：** 已提供 1.0 通用版下载（Apple 芯片 + Intel）。当前使用临时签名，**未经 Apple 公证**；尚未提供 Developer ID 正式签名版或 Mac App Store 版本。源码公开**不代表授予软件使用许可**，详见[使用与版权](#使用与版权)。
+> **项目状态：** 已提供 1.1 通用版下载（Apple 芯片 + Intel）。当前使用临时签名，**未经 Apple 公证**；尚未提供 Developer ID 正式签名版或 Mac App Store 版本。源码公开**不代表授予软件使用许可**，详见[使用与版权](#使用与版权)。
 
 ## 功能
 
@@ -41,12 +41,12 @@ ZRightClick 是一款原生 macOS Finder 右键增强工具，专注于日常文
 
 ## 开始使用
 
-### 下载 1.0
+### 下载 1.1
 
-[**下载 DMG 安装包**](https://github.com/inexom/ZRightClick/releases/download/v1.0/ZRightClick-1.0-universal.dmg) · [ZIP 压缩包](https://github.com/inexom/ZRightClick/releases/download/v1.0/ZRightClick-1.0-universal.zip) · [更新说明与校验值](https://github.com/inexom/ZRightClick/releases/tag/v1.0)
+[**下载 DMG 安装包**](https://github.com/inexom/ZRightClick/releases/download/v1.1/ZRightClick-1.1-universal.dmg) · [ZIP 压缩包](https://github.com/inexom/ZRightClick/releases/download/v1.1/ZRightClick-1.1-universal.zip) · [更新说明与校验值](https://github.com/inexom/ZRightClick/releases/tag/v1.1)
 
 1. 打开 DMG，将 **ZRightClick.app** 拖入**应用程序**。使用 ZIP 时，解压后将应用移入应用程序目录。
-2. 从应用程序目录启动，再按下文启用 Finder 扩展。
+2. 从应用程序目录启动，按首次启用引导打开系统扩展设置，并开启 ZRightClick。
 3. 当前版本**未经 Apple 公证**。如果 macOS 阻止打开，请先确认下载来源与校验值，再参考 [Apple 官方打开说明](https://support.apple.com/zh-cn/102445)，在可用时前往**系统设置 → 隐私与安全性 → 仍要打开**。
 
 同一安装包包含 **arm64 和 x86_64**，支持 Apple 芯片与 Intel Mac，要求 macOS 15 及以上。原位替换同一应用时会保留已有设置和目录授权。
@@ -71,12 +71,14 @@ cd ZRightClick
 
 ### 启用 Finder 扩展
 
-1. 在**系统设置 → 通用 → 登录项与扩展 → 访达扩展**中启用 **ZRightClick**。不同 macOS 版本的名称可能略有差异。
+1. 首次打开时，点击引导中的**打开系统设置**，在系统列表中启用 **ZRightClick**，返回应用后点击**开始使用**。部分 macOS 版本将此列表称为“文件提供程序”。手动入口通常在**系统设置 → 通用 → 登录项与扩展**中。
 2. 打开 ZRightClick，勾选希望显示的右键功能。
 3. 在普通文件夹空白处右键使用**新建文件**；选中文件或文件夹后，可复制路径或打开对应位置的终端。
 4. 首次执行文件或终端操作时，在系统弹窗中选择目标文件夹或它的上级目录。
 
 授权会保存供后续复用。新建文件需要**读写**权限，打开终端可使用**只读**权限。在**目录授权**页可以查看或移除已保存的授权。
+
+扩展未启用时，设置页会持续显示提醒；可以通过右上角的**扩展设置…**重新打开引导。引导检测真实系统状态，不会代替你开启开关。
 
 ## 一些使用细节
 

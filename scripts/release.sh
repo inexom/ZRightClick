@@ -3,15 +3,24 @@
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-VERSION="${1:-1.0}"
-[[ "$VERSION" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]] || { echo "Usage: $0 [version, e.g. 1.0]" >&2; exit 2; }
+VERSION="${1:-1.1}"
+[[ "$VERSION" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]] || { echo "Usage: $0 [version, e.g. 1.1]" >&2; exit 2; }
 OUT="$REPO/build/releases/v$VERSION"
 APP="$OUT/build/ZRightClick.app"
 EXT="$APP/Contents/PlugIns/ZRightClickFinderExtension.appex"
 NAME="ZRightClick-$VERSION-universal"
 mkdir -p "$OUT"
-STAGING="$(mktemp -d "$REPO/build/release-staging.XXXXXX")"
-trap 'rm -rf "$STAGING"' EXIT
+cleanup_products() {
+  # Xcode registers build products with Launch Services, which otherwise makes
+  # extra app icons appear alongside the installed copy. Keep only the archives.
+  local LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
+  for PLUGIN in "$EXT" "$OUT/build/ZRightClickFinderExtension.appex"; do
+    /usr/bin/pluginkit -r "$PLUGIN" >/dev/null 2>&1 || true
+  done
+  "$LSREGISTER" -u "$APP" >/dev/null 2>&1 || true
+  rm -rf "$APP" "$OUT/build/ZRightClickFinderExtension.appex"
+}
+trap cleanup_products EXIT
 
 echo "==> Building $VERSION for arm64 and x86_64 (ad-hoc signed, not notarized)"
 xcodebuild \
@@ -59,10 +68,7 @@ for path in sys.argv[1:]:
 PY
 
 echo "==> Packaging DMG and ZIP"
-/usr/bin/ditto "$APP" "$STAGING/ZRightClick.app"
-ln -s /Applications "$STAGING/Applications"
-cp "$REPO/docs/INSTALL.txt" "$STAGING/安装说明 - Read Me.txt"
-/usr/bin/hdiutil create -volname "ZRightClick $VERSION" -srcfolder "$STAGING" -format UDZO -ov "$OUT/$NAME.dmg"
+"$REPO/scripts/package-dmg.sh" "$APP" "$VERSION" "$OUT/$NAME.dmg"
 /usr/bin/ditto -c -k --sequesterRsrc --keepParent "$APP" "$OUT/$NAME.zip"
 (
   cd "$OUT"

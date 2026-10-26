@@ -30,15 +30,19 @@ For the full local development loop:
 
 The install script replaces `/Applications/ZRightClick.app`. Registering the installed extension, launching the host, and then restarting Finder are intentional: multiple registered copies and stale extension processes can prevent the expected build from loading. Build failures stop installation.
 
-The development setup has been verified locally with ad-hoc signing. Version 1.0 is distributed as an ad-hoc-signed, unnotarized universal build. Developer ID signing, notarization, App Store provisioning, and review have not been completed.
+The development setup has been verified locally with ad-hoc signing. Version 1.1 is distributed as an ad-hoc-signed, unnotarized universal build. Developer ID signing, notarization, App Store provisioning, and review have not been completed.
 
 ## Package a release
 
 ```sh
-./scripts/release.sh 1.0
+./scripts/release.sh 1.1
 ```
 
-Requires Python 3 for entitlement checks. This builds Release for arm64 and x86_64, verifies both bundles, their versions and signed sandbox entitlements, and creates a DMG, a ZIP, and `SHA256SUMS.txt` in `build/releases/v1.0/`. It does not install the build, restart Finder, create a Git tag, or publish to GitHub. The DMG includes the app, an Applications shortcut, and bilingual installation notes. The current script uses ad-hoc signing and does not notarize the build.
+Requires Python 3 for entitlement checks and an isolated packaging environment. On first use, the DMG helper installs the pinned `ds-store` and `mac-alias` packages into ignored `build/dmg-tools/`; they are not shipped in the app. This builds Release for arm64 and x86_64, verifies both bundles, their versions and signed sandbox entitlements, and creates a DMG, a ZIP, and `SHA256SUMS.txt` in `build/releases/v1.1/`. It does not install the build, restart Finder, create a Git tag, or publish to GitHub. The DMG has a bilingual background, fixed window layout, large icons, and an Applications shortcut. Finder metadata is written directly without Apple Events or Finder automation. Temporary app/extension products are unregistered and removed after packaging so they do not leave duplicate launcher icons. The current script uses ad-hoc signing and does not notarize the build.
+
+### Extension setup guide
+
+On first opening the settings window with the extension disabled, a bilingual guide explains activation and opens Apple's extension manager with `FIFinderSyncController.showExtensionManagementInterface()`. Some macOS versions label the list “File Providers” rather than “Finder Extensions”. The interface reads `FIFinderSyncController.isExtensionEnabled`; opening Settings alone never marks setup as complete. Users can defer setup, with a warning remaining in settings, or finish after the system reports activation. The guide is always accessible from Extension Settings. Checks run on application activation and every two seconds while the settings view exists; closing the window removes the timer and observer. Finder URL actions do not create a setup window.
 
 ## Tests
 

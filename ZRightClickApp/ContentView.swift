@@ -6,6 +6,7 @@ struct ContentView: View {
     @ObservedObject private var access = DirectoryAccessStore.shared
     @ObservedObject private var actions = FileActionController.shared
     @ObservedObject private var terminals = TerminalSettings.shared
+    @ObservedObject private var extensionSetup = ExtensionSetup.shared
     @State private var customName = ""
     @State private var customSuffix = ""
     @State private var validationError: Error?
@@ -19,10 +20,20 @@ struct ContentView: View {
                 }
                 Spacer()
                 Button(L10n.text("扩展设置…")) {
-                    if let url = URL(string: "x-apple.systempreferences:com.apple.ExtensionsPreferences") {
-                        NSWorkspace.shared.open(url)
-                    }
+                    extensionSetup.refresh()
+                    extensionSetup.isGuidePresented = true
                 }
+            }
+            if !extensionSetup.isEnabled {
+                HStack(spacing: 10) {
+                    Image(systemName: "exclamationmark.circle.fill").foregroundStyle(.orange)
+                    Text(L10n.text("Finder 扩展未启用，右键菜单暂不可用。"))
+                        .font(.callout)
+                    Spacer()
+                    Button(L10n.text("启用引导")) { extensionSetup.isGuidePresented = true }
+                }
+                .padding(12)
+                .background(Color.orange.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
             }
             TabView(selection: $settings.selectedTab) {
                 menuSettings.tabItem { Label(L10n.text("右键菜单"), systemImage: "cursorarrow.click") }.tag(MenuSettings.Tab.menus)
@@ -54,6 +65,11 @@ struct ContentView: View {
         }
         .padding(24)
         .frame(minWidth: 620, minHeight: 540)
+        .onAppear { extensionSetup.start() }
+        .onDisappear { extensionSetup.stop() }
+        .sheet(isPresented: $extensionSetup.isGuidePresented) {
+            ExtensionSetupView(setup: extensionSetup)
+        }
     }
 
     private var menuSettings: some View {
@@ -64,7 +80,7 @@ struct ContentView: View {
             menuToggle(L10n.text("复制路径"), detail: L10n.text("支持同时复制多个选中文件或文件夹的路径。"), key: \.copyPathEnabled)
             menuToggle(L10n.text("在此处打开终端"), detail: L10n.text("使用“终端”设置中选择的默认应用。"), key: \.terminalEnabled)
             Spacer()
-            Text(L10n.text("首次使用需在系统设置 → 通用 → 登录项与扩展 → 访达扩展中启用 ZRightClick。"))
+            Text(L10n.text(extensionSetup.isEnabled ? "Finder 扩展已启用。" : "首次使用需在系统设置 → 通用 → 登录项与扩展 → 访达扩展中启用 ZRightClick。"))
                 .font(.callout).foregroundStyle(.secondary)
         }.padding(20)
     }
